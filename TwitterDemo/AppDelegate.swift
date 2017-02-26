@@ -45,32 +45,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         print(url.description)
         let requestToken = BDBOAuth1Credential(queryString: url.query)
-        let twitterClient = BDBOAuth1SessionManager(baseURL: URL(string: "https://api.twitter.com")!, consumerKey: "jo7AnPgdDAvdDkjNX1Dzgnmp7", consumerSecret: "MH5lE6TCbrgMUwJ7WPkbMgDVqmuGDB6EVrRJkikJDUx33aQRX1")!
+        //let twitterClient = BDBOAuth1SessionManager(baseURL: URL(string: "https://api.twitter.com")!, consumerKey: "jo7AnPgdDAvdDkjNX1Dzgnmp7", consumerSecret: "MH5lE6TCbrgMUwJ7WPkbMgDVqmuGDB6EVrRJkikJDUx33aQRX1")!
+        let client = TwitterClient.sharedInstance
         
-        twitterClient.fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) -> Void in
+        client.fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) -> Void in
             print("Got access token")
             
-            twitterClient.get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
-                let userDictionary = response as! NSDictionary
-                let user = User(dictionary: userDictionary)
-                print("name: \(user.name)")
-                print("screename: \(user.screenname)")
-                print("profile url: \(user.profileUrl)")
-                print("decription: \(user.tagline)")
-            }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
-                print("Failed to verify credentials")
+            client.currentAccount()
+            client.homeTimeline(success: { (tweets: [Tweet]) -> () in
+                for tweet in tweets {
+                    print(tweet.text!)
+                }
+            }, failure: { (error: Error) -> () in
+                print(error.localizedDescription)
             })
             
-            twitterClient.get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
-                let dictionaries = response as! [NSDictionary]
-                let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
-                
-                for tweet in tweets {
-                    print("\(tweet.text!)")
-                }
-            }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
-                print("Failed to get home timeline")
-            })
         }) { (error: Error?) -> Void in
             print("Failed to get access token")
         }
