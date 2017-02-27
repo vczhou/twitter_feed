@@ -9,13 +9,17 @@
 import UIKit
 
 class Tweet: NSObject {
+    var id: Int?
     var text: String?
     var timestamp: Date?
     var retweetCount: Int = 0
     var favoriteCount: Int = 0
     var user: User?
+    var retweeted = false
+    var favorited = false
     
     init(dictionary: NSDictionary) {
+        id = (dictionary["id"] as? Int) ?? 0
         text = dictionary["text"] as? String
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         favoriteCount = (dictionary["favorite_count"] as? Int) ?? 0
@@ -28,6 +32,9 @@ class Tweet: NSObject {
         }
         
         user = User(dictionary: (dictionary["user"] as? NSDictionary)!)
+        
+        retweeted = dictionary["retweeted"] as! Bool
+        favorited = dictionary["favorited"] as! Bool
     }
     
     class func tweetsWithArray(dictionaries: [NSDictionary]) -> [Tweet]{

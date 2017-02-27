@@ -112,8 +112,9 @@
                                                         <constraint firstAttribute="width" constant="30" id="7IS-M8-UxP"/>
                                                         <constraint firstAttribute="height" constant="30" id="KeM-p2-zf8"/>
                                                     </constraints>
+                                                    <state key="normal" title="RT"/>
                                                     <connections>
-                                                        <action selector="onRetweetButton:" destination="V9B-i2-N2d" eventType="touchUpInside" id="Pmw-wS-SQJ"/>
+                                                        <action selector="onRetweetButton:" destination="gZl-ZU-Xit" eventType="touchUpInside" id="syO-RP-XSh"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="isU-wh-Icp">
@@ -122,8 +123,9 @@
                                                         <constraint firstAttribute="height" constant="30" id="Xuf-tK-igB"/>
                                                         <constraint firstAttribute="width" constant="30" id="ejg-B7-OCT"/>
                                                     </constraints>
+                                                    <state key="normal" title="&lt;3"/>
                                                     <connections>
-                                                        <action selector="onFavoriteButton:" destination="V9B-i2-N2d" eventType="touchUpInside" id="aiq-dH-5JJ"/>
+                                                        <action selector="onFavButton:" destination="gZl-ZU-Xit" eventType="touchUpInside" id="Zu1-WO-zHJ"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T4s-J5-ukd">
