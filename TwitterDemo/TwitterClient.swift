@@ -10,7 +10,7 @@ import UIKit
 import BDBOAuth1Manager
 
 class TwitterClient: BDBOAuth1SessionManager {
-    static let sharedInstance = TwitterClient(baseURL: URL(string: "https://api.twitter.com")!, consumerKey: "jo7AnPgdDAvdDkjNX1Dzgnmp7", consumerSecret: "MH5lE6TCbrgMUwJ7WPkbMgDVqmuGDB6EVrRJkikJDUx33aQRX1")!
+    static let sharedInstance = TwitterClient(baseURL: URL(string: "https://api.twitter.com")!, consumerKey: "PdPOZuL0M99HamGyjwZesURzT", consumerSecret: "OYHSMf5kre6891O1aHVcSKgUvBfdXDmHcQTtvhFcskpsga1ovI")!
     
     var loginSuccess: (() -> ())?
     var loginFailure: ((Error) -> ())?

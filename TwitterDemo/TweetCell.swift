@@ -61,35 +61,27 @@ class TweetCell: UITableViewCell {
 
     @IBAction func onRetweetButton(_ sender: Any) {
         if(!tweet.retweeted) {
-            self.retweetButton.setBackgroundImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
-            self.tweet.retweetCount += 1
-            self.reweetCountLabel.text = "\(self.tweet.retweetCount)"
+            TwitterClient.sharedInstance.retweet(id: tweet.id!, success: { (t: Tweet) in
+                self.retweetButton.setBackgroundImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
+                self.tweet.retweetCount += 1
+                self.reweetCountLabel.text = "\(self.tweet.retweetCount)"
+            }, failure: {(error: Error) -> () in
+                print(error.localizedDescription)
+            })
             self.tweet.retweeted = true
         }
-        
-        /*TwitterClient.sharedInstance.retweet(id: tweet.id!, success: { (t: Tweet) in
-            self.retweetButton.setBackgroundImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
-            self.tweet.retweetCount += 1
-            self.reweetCountLabel.text = "\(self.tweet.retweetCount)"
-        }, failure: {(error: Error) -> () in
-            print(error.localizedDescription)
-        })*/
     }
     
     @IBAction func onFavButton(_ sender: Any) {
         if(!tweet.favorited) {
-            self.favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
-            self.tweet.favoriteCount += 1
-            self.favoriteCountLabel.text = "\(self.tweet.favoriteCount)"
-            self.tweet.favorited = true
+            TwitterClient.sharedInstance.favorite(id: tweet.id!, success: { (b: Bool) in
+                self.favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+                self.tweet.favoriteCount += 1
+                self.favoriteCountLabel.text = "\(self.tweet.favoriteCount)"
+                self.tweet.favorited = true
+            }) { (error: Error) in
+                print(error.localizedDescription)
+            }
         }
-        
-        /*TwitterClient.sharedInstance.favorite(id: tweet.id!, success: { (b: Bool) in
-            self.favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
-            self.tweet.favoriteCount += 1
-            self.favoriteCountLabel.text = "\(self.tweet.favoriteCount)"
-        }) { (error: Error) in
-            print(error.localizedDescription)
-        }*/
     }
 }
