@@ -15,10 +15,10 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var handleLabel: UILabel!
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var tweetTextLabel: UILabel!
-    @IBOutlet weak var retweetImageView: UIImageView!
-    @IBOutlet weak var favoriteImageView: UIImageView!
     @IBOutlet weak var reweetCountLabel: UILabel!
     @IBOutlet weak var favoriteCountLabel: UILabel!
+    @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var retweetButton: UIButton!
     
     var tweet: Tweet! {
         didSet{
@@ -26,10 +26,13 @@ class TweetCell: UITableViewCell {
             profileImageView.setImageWith((tweeter.profileUrl)!)
             nameLabel.text = tweeter.name
             handleLabel.text = "@\(tweeter.screenname!)"
-            timestampLabel.text = tweet.timestamp?.description
+            timestampLabel.text = timeAgoSince(tweet.timestamp!)
             tweetTextLabel.text = tweet.text
             reweetCountLabel.text = "\(tweet.retweetCount)"
             favoriteCountLabel.text = "\(tweet.favoriteCount)"
+            let favoriteImage = UIImage(named: "favor-icon")
+            favoriteButton.setBackgroundImage(favoriteImage, for: .normal)
+            retweetButton.setBackgroundImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
         }
     }
     
