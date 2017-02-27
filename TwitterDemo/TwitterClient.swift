@@ -10,6 +10,8 @@ import UIKit
 import BDBOAuth1Manager
 
 class TwitterClient: BDBOAuth1SessionManager {
+    
+    
     static let sharedInstance = TwitterClient(baseURL: URL(string: "https://api.twitter.com")!, consumerKey: "jo7AnPgdDAvdDkjNX1Dzgnmp7", consumerSecret: "MH5lE6TCbrgMUwJ7WPkbMgDVqmuGDB6EVrRJkikJDUx33aQRX1")!
     
     var loginSuccess: (() -> ())?
@@ -30,12 +32,25 @@ class TwitterClient: BDBOAuth1SessionManager {
 
     }
     
+    func logout() {
+        User.currentUser = nil
+        deauthorize()
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil)
+    }
+    
     func handleOpenUrl(url: URL) {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
         fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) -> Void in
             print("Got access token")
             
-            self.loginSuccess?()
+            self.currentAccount(sucess: { (user: User) -> () in
+                User.currentUser = user
+                self.loginSuccess?()
+            }, failure: { (error: Error) -> () in
+                print(error.localizedDescription)
+                self.loginFailure?(error)
+            })
             
             /*currentAccount()
             homeTimeline(success: { (tweets: [Tweet]) -> () in
@@ -53,16 +68,20 @@ class TwitterClient: BDBOAuth1SessionManager {
 
     }
     
-    func currentAccount() {
+    func currentAccount(sucess: @escaping (User) -> (), failure: @escaping (Error) -> ()) {
         get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
             let userDictionary = response as! NSDictionary
             let user = User(dictionary: userDictionary)
-            print("name: \(user.name)")
+            
+            sucess(user)
+            
+            /*print("name: \(user.name)")
             print("screename: \(user.screenname)")
             print("profile url: \(user.profileUrl)")
-            print("decription: \(user.tagline)")
+            print("decription: \(user.tagline)")*/
         }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
             print("Failed to verify credentials")
+            failure(error)
         })
     }
     
