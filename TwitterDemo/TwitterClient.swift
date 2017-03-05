@@ -92,9 +92,20 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func favorite(id: Int, success: @escaping(Bool) -> (), failure: @escaping (Error) -> ()) {
+    func unretweet(id: Int, success: @escaping(Tweet) -> (), failure: @escaping (Error) -> ()) {
+        post("1.1/statuses/unretweet/\(id).json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
+            let tweet = Tweet(dictionary: response as! NSDictionary)
+            success(tweet)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+            print("Failed to unretweet on id: \(id)")
+            failure(error)
+        })
+    }
+    
+    func favorite(id: Int, success: @escaping(NSDictionary) -> (), failure: @escaping (Error) -> ()) {
         post("1.1/favorites/create.json?id=\(id)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
-            let favSuccess = response as! Bool
+            let favSuccess = response as! NSDictionary
             success(favSuccess)
             
         }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
@@ -102,4 +113,32 @@ class TwitterClient: BDBOAuth1SessionManager {
             failure(error)
         })
     }
+    
+    func unfavorite(id: Int, success: @escaping(NSDictionary) -> (), failure: @escaping (Error) -> ()) {
+        post("1.1/favorites/destroy.json?id=\(id)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
+            let unfavSuccess = response as! NSDictionary
+            success(unfavSuccess)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+            print("Failed to unfavorite on id: \(id)")
+            failure(error)
+        })
+    }
+    
+    func tweet(tweet: String, isReply: Bool, id: Int, success: @escaping(NSDictionary) -> (), failure: @escaping (Error) -> ()) {
+        var params = ["tweet": tweet]
+        if(isReply) {
+            params.updateValue("\(id)", forKey: "in_reply_to_status_id")
+        }
+        
+        post("1.1/statuses/update.json", parameters: params, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
+            let status = response as! NSDictionary
+            success(status)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+            print("Failed to post tweet on id: \(id)")
+            failure(error)
+        })
+    }
+
 }

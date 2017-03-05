@@ -11,8 +11,15 @@ import UIKit
 class User: NSObject {
     var name: String?
     var screenname: String?
-    var profileUrl: URL?
     var tagline: String?
+    
+    var profileUrl: URL?
+    var backgroundUrl: URL?
+    
+    var timeline: NSDictionary?
+    var numFavorites: Int?
+    var numFollowers: Int?
+    var numFollowing: Int?
     
     var dictionary: NSDictionary?
     
@@ -21,13 +28,22 @@ class User: NSObject {
         
         name = dictionary["name"] as? String
         screenname = dictionary["screen_name"] as? String
+        tagline = dictionary["description"] as? String
         
         let profileUrlString  = dictionary["profile_image_url_https"] as? String
         if let profileUrlString = profileUrlString {
             profileUrl = URL(string: profileUrlString)
         }
         
-        tagline = dictionary["description"] as? String
+        let backgroundUrlString = dictionary["profile_background_image_url_https"] as? String
+        if let backgroundUrlString = backgroundUrlString {
+            backgroundUrl = URL(string: backgroundUrlString)
+        }
+        
+        timeline = dictionary["staus"] as? NSDictionary
+        numFavorites = (dictionary["favourites_count"] as? Int) ?? 0
+        numFollowers = (dictionary["followers_count"] as? Int) ?? 0
+        numFollowing = (dictionary["friends_count"] as? Int) ?? 0
     }
     
     static let userDidLogoutNotification = "UserDidLogout"

@@ -24,13 +24,18 @@ class TweetCell: UITableViewCell {
         didSet{
             let tweeter = tweet.user!
             profileImageView.setImageWith((tweeter.profileUrl)!)
+            let imageView = profileImageView!
+            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector(("imageTapped:")))
+            imageView.isUserInteractionEnabled = true
+            imageView.addGestureRecognizer(tapGestureRecognizer)
+            
             nameLabel.text = tweeter.name
             handleLabel.text = "@\(tweeter.screenname!)"
             timestampLabel.text = timeAgoSince(tweet.timestamp!)
             tweetTextLabel.text = tweet.text
             reweetCountLabel.text = "\(tweet.retweetCount)"
             favoriteCountLabel.text = "\(tweet.favoriteCount)"
-            //let favoriteImage = UIImage(named: "favor-icon")
+
             if (tweet.favorited) {
                 favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
                 
@@ -46,6 +51,15 @@ class TweetCell: UITableViewCell {
             }
             retweetButton.setTitle("", for: .normal)
         }
+    }
+    
+    func imageTapped(img: UIGestureRecognizer) {
+        print("image was clicked")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        vc.user = tweet.user
+        
+        window?.rootViewController = vc
     }
     
     override func awakeFromNib() {
@@ -69,16 +83,34 @@ class TweetCell: UITableViewCell {
                 print(error.localizedDescription)
             })
             self.tweet.retweeted = true
+        } else {
+            TwitterClient.sharedInstance.unretweet(id: tweet.id!, success: { (t: Tweet) in
+                self.retweetButton.setBackgroundImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
+                self.tweet.retweetCount -= 1
+                self.reweetCountLabel.text = "\(self.tweet.retweetCount)"
+            }, failure: {(error: Error) -> () in
+                print(error.localizedDescription)
+            })
+            self.tweet.retweeted = false
         }
     }
     
     @IBAction func onFavButton(_ sender: Any) {
         if(!tweet.favorited) {
-            TwitterClient.sharedInstance.favorite(id: tweet.id!, success: { (b: Bool) in
+            TwitterClient.sharedInstance.favorite(id: tweet.id!, success: { (b: NSDictionary) in
                 self.favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
                 self.tweet.favoriteCount += 1
                 self.favoriteCountLabel.text = "\(self.tweet.favoriteCount)"
                 self.tweet.favorited = true
+            }) { (error: Error) in
+                print(error.localizedDescription)
+            }
+        } else {
+            TwitterClient.sharedInstance.unfavorite(id: tweet.id!, success: { (b: NSDictionary) in
+                self.favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+                self.tweet.favoriteCount -= 1
+                self.favoriteCountLabel.text = "\(self.tweet.favoriteCount)"
+                self.tweet.favorited = false
             }) { (error: Error) in
                 print(error.localizedDescription)
             }

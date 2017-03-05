@@ -1,43 +1,40 @@
 //
-//  TweetsViewController.swift
+//  profileViewController.swift
 //  TwitterDemo
 //
-//  Created by Victoria Zhou on 2/26/17.
+//  Created by Victoria Zhou on 2/28/17.
 //  Copyright © 2017 Victoria Zhou. All rights reserved.
 //
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDataSource{
-    
+class ProfileViewController: UIViewController, UITableViewDataSource {
+
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var profImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var handleLabel: UILabel!
+    @IBOutlet weak var tweetsCountLabel: UILabel!
+    @IBOutlet weak var followingCountsLabel: UILabel!
+    @IBOutlet weak var followersCountLabel: UILabel!   
     @IBOutlet weak var tableView: UITableView!
     
+    
+    var user: User!
     var tweets: [Tweet]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 300
         
         tableView.dataSource = self
-        
-        TwitterClient.sharedInstance.homeTimeline(success: { (tweets: [Tweet]) -> () in
-            self.tweets = tweets
-            self.tableView.reloadData()
-            
-        }, failure: { (error: Error) -> () in
-            print(error.localizedDescription)
-        })
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    @IBAction func onLogoutButton(_ sender: Any) {
-        TwitterClient.sharedInstance.logout()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,24 +53,15 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
         return cell
     }
     
+
+    /*
     // MARK: - Navigation
+
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        
-        let cell = sender as! UITableViewCell
-        
-        // No color when user selects cell
-        cell.selectionStyle = .none
-        
-        let indexPath = tableView.indexPath(for: cell)
-        let tweet = tweets![indexPath!.row]
-        
-        let detailViewController = segue.destination as! DetailTweetViewController
-        detailViewController.tweet = tweet
-        
-        print("Prepare for segue called")
     }
-    
+    */
+
 }
