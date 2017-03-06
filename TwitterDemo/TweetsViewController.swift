@@ -10,6 +10,7 @@ import UIKit
 
 class TweetsViewController: UIViewController, UITableViewDataSource{
     
+    @IBOutlet weak var composeButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     
     var tweets: [Tweet]!
@@ -22,6 +23,21 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
         
         tableView.dataSource = self
         
+        // Initialize a UIRefreshControl
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        // add refresh control to table view
+        tableView.insertSubview(refreshControl, at: 0)
+        
+        loadTimeline()
+    }
+
+    func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        loadTimeline()
+        refreshControl.endRefreshing()
+    }
+    
+    func loadTimeline() {
         TwitterClient.sharedInstance.homeTimeline(success: { (tweets: [Tweet]) -> () in
             self.tweets = tweets
             self.tableView.reloadData()
@@ -29,8 +45,9 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
         }, failure: { (error: Error) -> () in
             print(error.localizedDescription)
         })
-    }
 
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -47,6 +64,10 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
     @IBAction func onProfImButton(_ sender: Any) {
         performSegue(withIdentifier: "userDetail", sender: (sender as! UIButton).superview?.superview as! TweetCell)
     }
+    
+    /*@IBAction func onReplyButton(_ sender: Any) {
+        performSegue(withIdentifier: "compose", sender: (sender as! UIButton).superview?.superview as! TweetCell)
+    }*/
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let tweets = tweets{
@@ -87,8 +108,6 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
         } else {
             print("Lols why")
             let cell = sender as! TweetCell
-            // No color when user selects cell
-            //cell.selectionStyle = .none
             
             let indexPath = tableView.indexPath(for: cell)
             let tweet = tweets![indexPath!.row]

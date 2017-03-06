@@ -42,7 +42,6 @@ class ComposeTweetViewController: UIViewController, UITextFieldDelegate {
         print("I'm editing???")
         charCountLabel.text = "\(maxCharacters - (tweetTextField.text?.characters.count)!)"
     }
-    
 
     @IBAction func onTweetButton(_ sender: Any) {
         print(tweetTextField.text ?? "no text")
@@ -70,10 +69,10 @@ class ComposeTweetViewController: UIViewController, UITextFieldDelegate {
         }        
     }
     
-    @IBAction func onCancelButton(_ sender: Any) {
+    @IBAction func onCloseButton(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-    
+
     /*
     // MARK: - Navigation
 

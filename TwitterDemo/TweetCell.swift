@@ -19,17 +19,15 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var favoriteCountLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var retweetButton: UIButton!
-    
+    //@IBOutlet weak var replyButton: UIButton!
     
     var tweet: Tweet! {
         didSet{
             let tweeter = tweet.user!
             
             let profileImage = UIImageView()
-            profileImage.setImageWith(tweeter.profileUrl!)
-            if (profileImage.image == nil) {
-                return
-            }
+            //profileImage.setImageWith(tweeter.profileUrl!)
+            profileImage.setImageWith(tweeter.profileUrl!, placeholderImage: #imageLiteral(resourceName: "profile-Icon"))
             profImageButton.setBackgroundImage(profileImage.image, for: .normal)
             profImageButton.setTitle("", for: .normal)
             
@@ -54,6 +52,8 @@ class TweetCell: UITableViewCell {
                 retweetButton.setBackgroundImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
             }
             retweetButton.setTitle("", for: .normal)
+            
+            //replyButton.setBackgroundImage(#imageLiteral(resourceName: "reply-icon"), for: .normal)
         }
     }
     
