@@ -19,6 +19,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var followersCountLabel: UILabel!
     
     @IBOutlet weak var tableView: UITableView!
+
     
     var user: User!
     var tweets: [Tweet]!

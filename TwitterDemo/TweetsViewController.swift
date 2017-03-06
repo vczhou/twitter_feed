@@ -44,6 +44,10 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
         performSegue(withIdentifier: "compose", sender: self)
     }
     
+    @IBAction func onProfImButton(_ sender: Any) {
+        performSegue(withIdentifier: "userDetail", sender: (sender as! UIButton).superview?.superview as! TweetCell)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let tweets = tweets{
             return tweets.count
@@ -57,24 +61,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
         
         cell.tweet = tweets[indexPath.row]
         
-        let profileTap = UITapGestureRecognizer(target: self, action: #selector(profileTapped))
-        cell.profileImageView.isUserInteractionEnabled = true
-        cell.profileImageView.addGestureRecognizer(profileTap)
-        
         return cell
-    }
-    
-    func profileTapped() {
-        print("Profile image tapped")
-        self.performSegue(withIdentifier: "userDetail", sender: self)
-
-       /* let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let profileViewController = storyboard.instantiateViewController(withIdentifier: "profileViewController") as! ProfileViewController
-        
-        profileViewController.user = user
-        
-        self.navigationController?.pushViewController(profileViewController, animated: true)*/
-
     }
     
     // MARK: - Navigation
@@ -91,14 +78,17 @@ class TweetsViewController: UIViewController, UITableViewDataSource{
             destination.isReply = false
         } else if (segue.identifier == "userDetail") {
             print("Hello hello")
-            let cell = sender as! TweetCell
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPath(for: cell)
+            let tweetCell = tweets![indexPath!.row]
+            
             let destination = segue.destination as! ProfileViewController
-            destination.user = cell.tweet.user
+            destination.user = tweetCell.user
         } else {
             print("Lols why")
             let cell = sender as! TweetCell
             // No color when user selects cell
-            cell.selectionStyle = .none
+            //cell.selectionStyle = .none
             
             let indexPath = tableView.indexPath(for: cell)
             let tweet = tweets![indexPath!.row]

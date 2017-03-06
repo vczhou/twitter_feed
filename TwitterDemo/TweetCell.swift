@@ -10,7 +10,7 @@ import UIKit
 
 class TweetCell: UITableViewCell {
     
-    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var profImageButton: UIButton!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var handleLabel: UILabel!
     @IBOutlet weak var timestampLabel: UILabel!
@@ -25,7 +25,13 @@ class TweetCell: UITableViewCell {
         didSet{
             let tweeter = tweet.user!
             
-            profileImageView.setImageWith((tweeter.profileUrl)!)
+            let profileImage = UIImageView()
+            profileImage.setImageWith(tweeter.profileUrl!)
+            if (profileImage.image == nil) {
+                return
+            }
+            profImageButton.setBackgroundImage(profileImage.image, for: .normal)
+            profImageButton.setTitle("", for: .normal)
             
             nameLabel.text = tweeter.name
             handleLabel.text = "@\(tweeter.screenname!)"
@@ -61,7 +67,7 @@ class TweetCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
     @IBAction func onRetweetButton(_ sender: Any) {
         if(!tweet.retweeted) {
             TwitterClient.sharedInstance.retweet(id: tweet.id!, success: { (t: Tweet) in
