@@ -2,7 +2,7 @@
 
 **Twitter Feed** is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: **X** hours spent in total
+Time spent: **7** hours spent in total
 
 ## User Stories
 
@@ -59,7 +59,7 @@ Describe any challenges encountered while building the app.
 
 # Project 5 - *Twitter Feed*
 
-Time spent: **4** hours spent in total
+Time spent: **5** hours spent in total
 
 ## User Stories
 
