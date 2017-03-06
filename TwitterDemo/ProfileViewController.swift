@@ -31,10 +31,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         profImageView.setImageWith(user.profileUrl!)
         
         nameLabel.text = user.name
-        handleLabel.text = "@\(user.screenname)"
-        tweetsCountLabel.text = "\(user.numTweets)"
-        followingCountsLabel.text = "\(user.numFollowing)"
-        followersCountLabel.text = "\(user.numFollowers)"
+        handleLabel.text = "@\(user.screenname!)"
+        tweetsCountLabel.text = "\(user.numTweets!)"
+        followingCountsLabel.text = "\(user.numFollowing!)"
+        followersCountLabel.text = "\(user.numFollowers!)"
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 300
