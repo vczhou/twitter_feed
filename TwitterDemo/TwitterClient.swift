@@ -81,6 +81,22 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func userTimeline(screenname: String, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        let params = ["screen_name": screenname]
+        
+        get("1.1/statuses/user_timeline.json", parameters: params, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
+            
+            success(tweets)
+        }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+            print("Failed to get home timeline")
+            failure(error)
+        })
+    }
+    
+    
+    
     func retweet(id: Int, success: @escaping(Tweet) -> (), failure: @escaping (Error) -> ()) {
         post("1.1/statuses/retweet/\(id).json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
             let tweet = Tweet(dictionary: response as! NSDictionary)
@@ -125,18 +141,20 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func tweet(tweet: String, isReply: Bool, id: Int, success: @escaping(NSDictionary) -> (), failure: @escaping (Error) -> ()) {
-        var params = ["tweet": tweet]
+    func tweet(tweet: String, isReply: Bool, id: Int, success: @escaping(Tweet) -> (), failure: @escaping (Error) -> ()) {
+        var params = ["status": tweet]
         if(isReply) {
             params.updateValue("\(id)", forKey: "in_reply_to_status_id")
         }
         
         post("1.1/statuses/update.json", parameters: params, progress: nil, success: { (task: URLSessionDataTask?, response: Any?) -> Void in
             let status = response as! NSDictionary
-            success(status)
+            let tweet = Tweet(dictionary: status)
+            success(tweet)
             
         }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
             print("Failed to post tweet on id: \(id)")
+            print(error.localizedDescription)
             failure(error)
         })
     }

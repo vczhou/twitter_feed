@@ -63,7 +63,7 @@ class DetailTweetViewController: UIViewController {
     
     
     @IBAction func onReplyButton(_ sender: Any) {
-        
+        performSegue(withIdentifier: "compose", sender: self)
     }
     
     @IBAction func onRetweetButton(_ sender: Any) {
@@ -110,14 +110,28 @@ class DetailTweetViewController: UIViewController {
         }
     }
     
-    /*
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        print("Prepare for segue called")
+        print(segue.identifier ?? "no identifier")
+        
+        if (segue.identifier == "compose"){
+            print("Hello ")
+            let destination = segue.destination as! ComposeTweetViewController
+            destination.isReply = true
+            destination.replyText = "@\(tweet.user!.screenname!)"
+        }
+        
+        if (segue.identifier == "userDetail") {
+            print("Hello hello")
+            let cell = sender as! TweetCell
+            let destination = segue.destination as! ProfileViewController
+            destination.user = cell.tweet.user
+        }
     }
-    */
+
 
 }

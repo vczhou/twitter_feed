@@ -16,7 +16,7 @@ class User: NSObject {
     var profileUrl: URL?
     var backgroundUrl: URL?
     
-    var timeline: NSDictionary?
+    var numTweets: Int?
     var numFavorites: Int?
     var numFollowers: Int?
     var numFollowing: Int?
@@ -40,7 +40,7 @@ class User: NSObject {
             backgroundUrl = URL(string: backgroundUrlString)
         }
         
-        timeline = dictionary["staus"] as? NSDictionary
+        numTweets = (dictionary["statuses_count"] as? Int) ?? 0
         numFavorites = (dictionary["favourites_count"] as? Int) ?? 0
         numFollowers = (dictionary["followers_count"] as? Int) ?? 0
         numFollowing = (dictionary["friends_count"] as? Int) ?? 0

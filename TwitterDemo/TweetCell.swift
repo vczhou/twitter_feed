@@ -20,14 +20,12 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var retweetButton: UIButton!
     
+    
     var tweet: Tweet! {
         didSet{
             let tweeter = tweet.user!
+            
             profileImageView.setImageWith((tweeter.profileUrl)!)
-            let imageView = profileImageView!
-            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector(("imageTapped:")))
-            imageView.isUserInteractionEnabled = true
-            imageView.addGestureRecognizer(tapGestureRecognizer)
             
             nameLabel.text = tweeter.name
             handleLabel.text = "@\(tweeter.screenname!)"
@@ -51,15 +49,6 @@ class TweetCell: UITableViewCell {
             }
             retweetButton.setTitle("", for: .normal)
         }
-    }
-    
-    func imageTapped(img: UIGestureRecognizer) {
-        print("image was clicked")
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
-        vc.user = tweet.user
-        
-        window?.rootViewController = vc
     }
     
     override func awakeFromNib() {

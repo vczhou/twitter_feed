@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController, UITableViewDataSource {
+class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var profImageView: UIImageView!
@@ -16,20 +16,38 @@ class ProfileViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var handleLabel: UILabel!
     @IBOutlet weak var tweetsCountLabel: UILabel!
     @IBOutlet weak var followingCountsLabel: UILabel!
-    @IBOutlet weak var followersCountLabel: UILabel!   
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var followersCountLabel: UILabel!
     
+    @IBOutlet weak var tableView: UITableView!
     
     var user: User!
     var tweets: [Tweet]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        backgroundImageView.setImageWith(user.backgroundUrl!)
+        profImageView.setImageWith(user.profileUrl!)
+        
+        nameLabel.text = user.name
+        handleLabel.text = "@\(user.screenname)"
+        tweetsCountLabel.text = "\(user.numTweets)"
+        followingCountsLabel.text = "\(user.numFollowing)"
+        followersCountLabel.text = "\(user.numFollowers)"
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 300
         
         tableView.dataSource = self
+        tableView.delegate = self
+        
+        TwitterClient.sharedInstance.userTimeline(screenname: user.screenname!, success: { (tweets: [Tweet]) in
+            self.tweets = tweets
+            self.tableView.reloadData()
+        }, failure: { (error: Error) in
+            self.tweets = []
+            print("Failed to get user timeline for \(self.user.screenname)" )
+        })
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,7 +71,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource {
         return cell
     }
     
-
     /*
     // MARK: - Navigation
 
